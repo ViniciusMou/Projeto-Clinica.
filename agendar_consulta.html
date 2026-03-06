@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Consulta</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #e6faff; /* ciano claro */
+        }
+
+        .navbar {
+            background-color: #00bcd4; /* ciano */
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: white !important;
+        }
+
+        .card {
+            border-radius: 14px;
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            border-top: 4px solid #00bcd4;
+        }
+
+        h4 {
+            color: #00bcd4;
+            border-left: 5px solid red;
+            padding-left: 10px;
+            font-weight: 700;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        h6 {
+            color: #00bcd4;
+            border-left: 4px solid red;
+            padding-left: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.18rem rgba(0, 188, 212, 0.40);
+            border-color: #00bcd4;
+        }
+
+        .btn-custom {
+            background-color: #00bcd4;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.3s;
+            border-left: 6px solid red;
+        }
+
+        .btn-custom:hover {
+            background-color: #009eb3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="./logotipo/logo barra.png" alt="Logo" height="40" class="me-2">
+                AmorSaúde - Agendamentos
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card p-4 mx-auto" style="max-width: 700px;">
+            <h4 class="mb-3">Agendar Consulta</h4>
+
+            <form id="formConsulta">
+
+                <div class="mb-3">
+                    <label>Paciente</label>
+                    <select id="selectPaciente" class="form-select" required></select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Profissional</label>
+                    <select id="selectProfissional" class="form-select" required></select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Procedimento</label>
+                    <input type="text" id="procedimentoConsulta" class="form-control" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Data</label>
+                        <input type="date" id="dataConsulta" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Hora</label>
+                        <input type="time" id="horaConsulta" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label>Acompanhante (opcional)</label>
+                    <textarea id="acompanhanteConsulta" class="form-control"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100">
+                    <i class="bi bi-calendar-plus-fill"></i> Agendar Consulta
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function carregarDados() {
+            const pacientes = JSON.parse(localStorage.getItem("pacientesLista")) || [];
+            const profissionais = JSON.parse(localStorage.getItem("profissionaisLista")) || [];
+
+            const selectPaciente = document.getElementById("selectPaciente");
+            const selectProfissional = document.getElementById("selectProfissional");
+
+            pacientes.forEach(p => {
+                selectPaciente.innerHTML += `<option value="${p.nome}">${p.nome}</option>`;
+            });
+
+            profissionais.forEach(p => {
+                selectProfissional.innerHTML += `<option value="${p.nome}">${p.nome} (${p.especialidade})</option>`;
+            });
+        }
+
+        document.getElementById("formConsulta").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const consulta = {
+                paciente: selectPaciente.value,
+                profissional: selectProfissional.value,
+                procedimento: procedimentoConsulta.value,
+                data: dataConsulta.value,
+                hora: horaConsulta.value,
+                acompanhante: acompanhanteConsulta.value,
+                status: ""
+            };
+
+            localStorage.setItem("novaConsulta", JSON.stringify(consulta));
+
+            alert("Consulta agendada com sucesso!");
+
+            window.location.href = "index.html";
+        });
+
+        carregarDados();
+    </script>
+
+</body>
+
+</html>
